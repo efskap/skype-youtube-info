@@ -33,7 +33,8 @@ class LinkSniffer(SkypeBot):
         d = p.description.strip()
         if len(d) > 300:
             d = d[0:300] + "..."
-        return "<font size=\"9\" color=\"#6B523B\">"+  name + '</font>\n<font size=\"13\"><a href="https://www.youtube.com/watch?v='+ id + '">' + p.title + "</a></font><font  color=\"#5B6F73\" size=\"13\"> [" + p.duration + "]</font>" + "\n" +( ( "<font color=\"#5B6F73\">" + d + "</font>") if desc else "")
+        href = ' <font size="7"><a href="https://github.com/efskap/skype-youtube-info">' + "(github)" + '</a></font>'
+        return '<font size="10" color="#6B523B">'+  name + '</font>' + href + '\n<font size="13"><a href="https://www.youtube.com/watch?v='+ id + '">' + p.title + '</a></font><font  color="#5B6F73" size="13"> [' + p.duration + "]</font>" + "\n" +( ( '<font color="#5B6F73">' + d + "</font>") if desc else "")
     def onEvent(self, event):
         if isinstance(event, SkypeMessageEvent):
             #if (not event.msg.chat().has_attr('userIds') or len(event.msg.chat().userIds) < 5)
