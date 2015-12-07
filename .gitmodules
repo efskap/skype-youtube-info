@@ -1,0 +1,3 @@
+[submodule "SkyPy"]
+	path = SkyPy
+	url = https://github.com/OllieTerrance/SkyPy.git
