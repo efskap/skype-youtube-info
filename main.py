@@ -8,7 +8,7 @@ import html
 
 
 name = "youtube-sniffer"
-ytpattern = re.compile("(?:http[s]?://www\.youtube\.com/watch\?v=|http://youtu.be/)([0-9A-Za-z\-_]*)")
+ytpattern = re.compile("(?:http[s]?://www\.youtube\.com/watch\?v=|http[s]?://youtu.be/)([0-9A-Za-z\-_]*)")
 
 YOUR_USER_NAME = ""
 YOUR_PASSWORD = ""
