@@ -9,6 +9,7 @@ import html
 
 
 name = "youtube-sniffer"
+
 ytpattern = re.compile("(?:http[s]?://www\.youtube\.com/watch\?v=|http[s]?://youtu.be/)([0-9A-Za-z\-_]*)(?:[#\?]t=([0-9]+))?")
 
 YOUR_USER_NAME = ""
