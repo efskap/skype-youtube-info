@@ -15,10 +15,10 @@ ytpattern = re.compile("(?:http[s]?://www\.youtube\.com/watch\?v=|http[s]?://you
 YOUR_USER_NAME = ""
 YOUR_PASSWORD = ""
 
-class LinkSniffer(SkypeBot):
-    def __init__(self, usern,passw):
+class LinkSniffer():
+    def __init__(self):
+        print("LinkSniffer init")
         self.last_reply = None
-        super().__init__(usern,passw,'tokenfile')
     prev = ''
     reply_pool = {}
 
@@ -49,13 +49,13 @@ class LinkSniffer(SkypeBot):
         if secs:
             s = self.remove_leading_zeroes(time.strftime('%H:%M:%S', time.gmtime(int(secs))))
             dur = s + "/" + self.remove_leading_zeroes(p.duration)
-            id = id + "?t=" + secs
+            id = id + "#t=" + secs
         else:
             dur = p.duration
         if len(d) > 300:
             d = d[0:300] + "..."
         return '<font size="13"><a href="https://www.youtube.com/watch?v='+ id + '">' + p.title + '</a></font><font  color="#5B6F73" size="13"> [' + dur + "]</font>" + "\n" +( ( '<font color="#5B6F73">' + d + "</font>") if desc else "")
-    def onEvent(self, event):
+    def onEvent(self, event, controller):
         if isinstance(event, SkypeMessageEvent):
             #if (not event.msg.chat().has_attr('userIds') or len(event.msg.chat().userIds) < 5)
             href = ' <font size="7"><a href="https://github.com/efskap/skype-youtube-info">' + "(github)" + '</a></font>'
@@ -69,12 +69,10 @@ class LinkSniffer(SkypeBot):
                     self.last_reply.edit(output,rich=True)
                 else:
                     self.last_reply = event.msg.chat.sendMsg(output,rich=True)
-
-
-            
-
-            #this stuff is for formating my own messages, not really part of youtube-sniffer
-            if event.msg.userId == self.userId and ('&lt;' in event.msg.content):# and '</font>' not in message.text:
+class MessageFormatter():
+     def onEvent(self, event, controller):
+        if isinstance(event, SkypeMessageEvent):
+            if event.msg.userId == controller.userId and ('&lt;' in event.msg.content):# and '</font>' not in message.text:
                 #m.edit('<font color="#00000" size="20">' + m.text + '</font>')
                 t = event.msg.content
                 t = t.replace("&apos;","'")
@@ -86,10 +84,18 @@ class LinkSniffer(SkypeBot):
                 event.msg.edit(t,rich=True)
                 event.msg.edit(t,rich=True)
 
+
+class MainBotController(SkypeBot):
+    def __init__(self, usern,passw, bots):
+        self.bots = [bot() for bot in bots]
+        super().__init__(usern,passw,'tokenfile')
+    def onEvent(self, event):
+        for bot in self.bots:
+             bot.onEvent(event,self)
 if __name__ == '__main__':
     while True:
         try:
-            LinkSniffer(YOUR_USER_NAME, YOUR_PASSWORD)
+            MainBotController(YOUR_USER_NAME, YOUR_PASSWORD, [LinkSniffer, MessageFormatter])
         except Exception as e:
             print(str(e))
             pass
