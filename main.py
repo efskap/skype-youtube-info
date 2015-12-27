@@ -57,18 +57,18 @@ class LinkSniffer():
         return '<font size="13"><a href="https://www.youtube.com/watch?v='+ id + '">' + p.title + '</a></font><font  color="#5B6F73" size="13"> [' + dur + "]</font>" + "\n" +( ( '<font color="#5B6F73">' + d + "</font>") if desc else "")
     def onEvent(self, event, controller):
         if isinstance(event, SkypeMessageEvent):
-            #if (not event.msg.chat().has_attr('userIds') or len(event.msg.chat().userIds) < 5)
-            href = ' <font size="7"><a href="https://github.com/efskap/skype-youtube-info">' + "(github)" + '</a></font>'
-            header = '<font size="10" color="#6B523B">'+  name + '</font>' + href + "<br/>"
-            separator = '<font color="#5B6F73"><br/><hr/></font>'
-            replies = list(self.handleyt(event.msg))
-            #print(str(event.msg.id) + " | " + str(event.msg.editId))
-            if len(replies) > 0:
-                output = header + separator.join(replies)
-                if isinstance(event, SkypeEditMessageEvent) and self.last_reply is not None:
-                    self.last_reply.edit(output,rich=True)
-                else:
-                    self.last_reply = event.msg.chat.sendMsg(output,rich=True)
+            if (not hasattr(event.msg.chat,'userIds') or len(event.msg.chat.userIds) < 4):
+                href = ' <font size="7"><a href="https://github.com/efskap/skype-youtube-info">' + "(github)" + '</a></font>'
+                header = '<font size="10" color="#6B523B">'+  name + '</font>' + href + "<br/>"
+                separator = '<font color="#5B6F73"><br/><hr/></font>'
+                replies = list(self.handleyt(event.msg))
+                #print(str(event.msg.id) + " | " + str(event.msg.editId))
+                if len(replies) > 0:
+                    output = header + separator.join(replies)
+                    if isinstance(event, SkypeEditMessageEvent) and self.last_reply is not None:
+                        self.last_reply.edit(output,rich=True)
+                    else:
+                        self.last_reply = event.msg.chat.sendMsg(output,rich=True)
 class MessageFormatter():
      def onEvent(self, event, controller):
         if isinstance(event, SkypeMessageEvent):
